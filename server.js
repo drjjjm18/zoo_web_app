@@ -22,7 +22,10 @@ io.on('connection', function (socket) {
   players[socket] = {'name': '', 'ready': false, 'animals': []};
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    names = names.filter(item => item !== players[socket].name)
+
+    delete players[socket]
+    console.log('user disconnected '+names);
   });
 
   socket.on('name', (name)=> {
@@ -33,6 +36,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('changeName', (name)=> {
+    names = names.filter(item => item !== players[socket].name)
     players[socket] = {'name': '', 'ready': false, 'animals': []};
   });
 

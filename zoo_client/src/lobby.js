@@ -33,8 +33,8 @@ function Lobby() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
 
-      <p>Welcome to your Lobby</p>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px'  }}>
+      <h1>Welcome to your Lobby</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px'  }}>
           <button
           onClick={sendReady}
           style={{ backgroundColor: ready ? 'green' : 'grey' }}
