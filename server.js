@@ -14,6 +14,7 @@ const io = new Server(httpServer, {
 //console.log('Listening on port ' + port + '...');
 
 players = {}
+names = []
 
 io.on('connection', function (socket) {
 
@@ -26,10 +27,12 @@ io.on('connection', function (socket) {
 
   socket.on('name', (name)=> {
     players[socket]['name'] = name
-    console.log(players[socket])
+    names.push(name)
+    console.log(names)
+    io.emit('names: '+ names.toString())
   });
 
-  socket.on('chaneName', (name)=> {
+  socket.on('changeName', (name)=> {
     players[socket] = {'name': '', 'ready': false, 'animals': []};
   });
 
@@ -39,7 +42,7 @@ io.on('connection', function (socket) {
         socket.emit('boot')
     }
     else {
-        players[socket]['ready'] = true
+        players[socket]['ready'] = !players[socket]['ready']
         console.log(players[socket])
         const all_ready = true;
         for (const obj in players) {
@@ -53,6 +56,9 @@ io.on('connection', function (socket) {
     };
   });
 
+  function setUpGame(){
+    io.emit(concat(['names'], names))
+  }
 
 });
 

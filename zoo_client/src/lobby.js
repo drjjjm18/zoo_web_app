@@ -7,25 +7,41 @@ function Lobby() {
   const socket = useContext(SocketContext);
   const navigate = useNavigate();
 
+  const [ready, setReady] = useState(false);
+  const [names, setNames] = useState([]);
+
   socket.on('boot', () => boot());
-  socket.on('start', () => console.log('start'))
+  socket.on('start', () => console.log('start'));
+  socket.on('names', (names) => parseNames());
 
   function boot() {
     navigate("/")
     socket.emit('changeName')
   }
 
+  function parseNames(names) {
+   console.log(names);
+  }
+
   function sendReady() {
+    setReady(!ready);
+    console.log(ready)
     console.log('sendReady called')
     socket.emit('ready');
   }
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
+
       <p>Welcome to your Lobby</p>
-      <button onClick={sendReady}> READY </button>
-      <button onClick={boot}> Back to Lobby </button>
-    </>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px'  }}>
+          <button
+          onClick={sendReady}
+          style={{ backgroundColor: ready ? 'green' : 'grey' }}
+          > READY </button>
+          <button onClick={boot}> Back to Lobby </button>
+      </div>
+    </div>
   );
 };
 export default Lobby;
