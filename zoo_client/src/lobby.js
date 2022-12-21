@@ -11,12 +11,16 @@ function Lobby() {
   const [names, setNames] = useState([]);
 
   socket.on('boot', () => boot());
-  socket.on('start', () => console.log('start'));
+  socket.on('start', () => start());
   socket.on('names', (names) => parseNames());
 
   function boot() {
     navigate("/")
     socket.emit('changeName')
+  }
+
+  function start(){
+    navigate("/game")
   }
 
   function parseNames(names) {
@@ -31,7 +35,7 @@ function Lobby() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
+    <div style={{  backgroundColor: '#a5b7d9', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
 
       <h1>Welcome to your Lobby</h1>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px'  }}>
