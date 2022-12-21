@@ -15,10 +15,11 @@ function Login() {
   }
 
   return (
-    <>
+    <div style={{  backgroundColor: '#a5b7d9', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
+        <h1> Enter your Name </h1>
         <input ref={NameRef} type="text"/>
         <button onClick={handleSend}> SEND </button>
-    </>
+    </div>
   );
 };
 
