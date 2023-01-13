@@ -48,16 +48,23 @@ io.on('connection', function (socket) {
     else {
         players[socket]['ready'] = !players[socket]['ready']
         console.log(players[socket])
-        const all_ready = true;
-        for (const obj in players) {
-            if (obj['ready'] == false) {
-               all_ready = false;
-            }
-        }
-        if (all_ready) {
-            io.emit('start')
-        }
+
     };
+  });
+
+  socket.on('start', () => {
+    console.log('start called')
+    const all_ready = true;
+    for (const obj in players) {
+        if (obj['ready'] == false) {
+
+           console.log('not all players ready')
+           all_ready = false;
+        }
+    }
+    if (all_ready) {
+        io.emit('start_game')
+    }
   });
 
   function setUpGame(){

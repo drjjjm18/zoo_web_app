@@ -11,7 +11,7 @@ function Lobby() {
   const [names, setNames] = useState([]);
 
   socket.on('boot', () => boot());
-  socket.on('start', () => start());
+  socket.on('start_game', () => start_game());
   socket.on('names', (names) => parseNames());
 
   function boot() {
@@ -19,7 +19,8 @@ function Lobby() {
     socket.emit('changeName')
   }
 
-  function start(){
+  function start_game(){
+    console.log('start_game received')
     navigate("/game")
   }
 
@@ -28,10 +29,19 @@ function Lobby() {
   }
 
   function sendReady() {
+
     setReady(!ready);
-    console.log(ready)
     console.log('sendReady called')
     socket.emit('ready');
+  }
+
+  function send_server_start() {
+    console.log('sending start')
+    if(ready){
+      socket.emit('start');
+    }
+
+    else{ return };
   }
 
   return (
@@ -45,6 +55,7 @@ function Lobby() {
           > READY </button>
           <button onClick={boot}> Back to Lobby </button>
       </div>
+      <button onClick={send_server_start}>START GAME</button>
     </div>
   );
 };

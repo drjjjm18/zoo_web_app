@@ -12,8 +12,7 @@ function Game() {
   const [animal, setAnimal] = useState('animal');
   const canSubmit = false;
 //  socket.on('boot', () => boot());
-//  socket.on('start', () => console.log('start'));
-//  socket.on('names', (names) => parseNames());
+  socket.on('notReady', () => notReady());
   socket.onmessage = function (event) {
 
     switch (event.data[0])
@@ -35,6 +34,11 @@ function Game() {
 
   function handleWager(e) {
    console.log(e);
+  }
+
+  function notReady(){
+    console.log('not ready')
+    alert('Not all players Ready')
   }
 
 
