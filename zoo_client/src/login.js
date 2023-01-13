@@ -7,18 +7,24 @@ function Login() {
   const navigate = useNavigate();
   const socket = useContext(SocketContext);
 
-  function handleSend(e){
+  socket.on('connected', () => enterLobby());
+
+  function connectToServer(e){
     console.log('handleSend called')
-    let msg = NameRef.current.value
-    socket.emit('name', msg);
-    navigate("/lobby");
+    let username = NameRef.current.value
+    socket.auth = { username };
+    socket.connect();
+  }
+
+  function enterLobby(){
+    navigate("/lobby")
   }
 
   return (
     <div style={{  backgroundColor: '#a5b7d9', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
         <h1> Enter your Name </h1>
         <input ref={NameRef} type="text"/>
-        <button onClick={handleSend}> SEND </button>
+        <button onClick={connectToServer}> ENTER </button>
     </div>
   );
 };

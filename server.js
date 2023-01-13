@@ -19,7 +19,12 @@ names = []
 io.on('connection', function (socket) {
 
   console.log('new connection');
-  players[socket] = {'name': '', 'ready': false, 'animals': []};
+  //players[socket] = {'name': '', 'ready': false, 'animals': []};
+  const username = socket.handshake.auth.username;
+  players[username] = {'name': username, 'ready': false, 'animals': []}
+  console.log(players)
+  console.log('sending connected')
+  socket.emit('connected')
 
   socket.on('disconnect', () => {
     names = names.filter(item => item !== players[socket].name)
