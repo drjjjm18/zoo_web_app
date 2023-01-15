@@ -8,61 +8,46 @@ const io = new Server(httpServer, {
   }
 })
 
-//import { Server } from "socket.io";
-//const port = 1337;
-//const io = new Server(port);
-//console.log('Listening on port ' + port + '...');
-
 players = {}
 names = []
 
 io.on('connection', function (socket) {
 
   console.log('new connection');
-  //players[socket] = {'name': '', 'ready': false, 'animals': []};
   const username = socket.handshake.auth.username;
   players[username] = {'name': username, 'ready': false, 'animals': []}
+  socket.username = username
   console.log(players)
   console.log('sending connected')
   socket.emit('connected')
 
   socket.on('disconnect', () => {
-    names = names.filter(item => item !== players[socket].name)
+    names = names.filter(item => item !== players[socket.username].name)
 
-    delete players[socket]
-    console.log('user disconnected '+names);
+    delete players[socket.username]
+    console.log('user disconnected', players);
   });
 
-  socket.on('name', (name)=> {
-    players[socket]['name'] = name
-    names.push(name)
-    console.log(names)
-    io.emit('names: '+ names.toString())
-  });
 
-  socket.on('changeName', (name)=> {
-    names = names.filter(item => item !== players[socket].name)
-    players[socket] = {'name': '', 'ready': false, 'animals': []};
-  });
 
   socket.on('ready', ()=> {
-    if (players[socket]['name']=='') {
+    if (players[socket.username]['name']=='') {
         console.log('sending boot')
         socket.emit('boot')
     }
     else {
-        players[socket]['ready'] = !players[socket]['ready']
-        console.log(players[socket])
+        players[socket.username]['ready'] = !players[socket.username]['ready']
+        console.log(players[socket.username])
 
     };
   });
 
   socket.on('start', () => {
     console.log('start called')
-    const all_ready = true;
-    for (const obj in players) {
-        if (obj['ready'] == false) {
+    var all_ready = true;
+    for (const key in players) {
 
+        if (players[key].ready == false) {
            console.log('not all players ready')
            all_ready = false;
         }

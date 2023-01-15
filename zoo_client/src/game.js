@@ -28,8 +28,8 @@ function Game() {
 };
 
   function boot() {
-    navigate("/")
-    socket.emit('changeName')
+    navigate("/login")
+    socket.disconnect()
   }
 
   function handleWager(e) {

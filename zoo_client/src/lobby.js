@@ -15,8 +15,8 @@ function Lobby() {
   socket.on('names', (names) => parseNames());
 
   function boot() {
-    navigate("/")
-    socket.emit('changeName')
+    navigate("/login")
+    socket.disconnect()
   }
 
   function start_game(){

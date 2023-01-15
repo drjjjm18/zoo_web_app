@@ -13,7 +13,7 @@ root.render(
     <SocketContext.Provider value={socket}>
         <BrowserRouter>
             <Routes>
-                <Route index element={<Login />} />
+                <Route path="login" element={<Login />} />
                 <Route path="lobby" element={<Lobby />} />
                 <Route path="game" element={<Game />} />
             </Routes>
