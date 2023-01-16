@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from './context/socket';
 
@@ -13,19 +13,23 @@ function Game() {
   const canSubmit = false;
 //  socket.on('boot', () => boot());
   socket.on('notReady', () => notReady());
-  socket.onmessage = function (event) {
 
-    switch (event.data[0])
-    {
-        case "names" :
-            setNames(event.data)
-            console.log(names)
-        break;
-        case "animal" :
-            console.log(event.data)
-        break;
-    }
-};
+  useEffect(() => {
+    socket.on('names', (data) => {
+        var newData = {};
+        for (let key in data){
+            newData[key] = {'budget': data[key].budget}
+        }
+
+        setNames(newData);
+    })
+
+  });
+
+
+//  function names(event){
+//    console.log()
+//  }
 
   function boot() {
     navigate("/login")
@@ -34,6 +38,7 @@ function Game() {
 
   function handleWager(e) {
    console.log(e);
+   socket.emit('sendNames')
   }
 
   function notReady(){
@@ -54,10 +59,10 @@ function Game() {
                 </tr>
               </thead>
               <tbody>
-                {names.map((item) => (
-                  <tr key={item.name}>
-                    <td>{item.name}</td>
-                    <td>{item.budget}</td>
+                {Object.entries(names).map(([name, {budget}]) => (
+                  <tr key={name}>
+                    <td>{name}</td>
+                    <td>{budget}</td>
                   </tr>
                 ))}
               </tbody>
