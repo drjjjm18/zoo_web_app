@@ -22,7 +22,11 @@ function Game() {
         }
         setNames(newData);
     })
-
+  });
+  useEffect(() => {
+      if (!socket.connected){
+        navigate('/login');
+  }
   });
 
   function boot() {
