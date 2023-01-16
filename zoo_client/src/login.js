@@ -10,6 +10,8 @@ function Login() {
 
   socket.on('connected', () => enterLobby());
   socket.on('taken', () => takenUsername());
+  socket.on('connect_error', err => handleErrors(err))
+  socket.on('connect_failed', err => handleErrors(err))
 
   function connectToServer(e){
     let username = NameRef.current.value
@@ -28,6 +30,13 @@ function Login() {
   function takenUsername(){
     socket.disconnect()
     setErrorText(`Username '${NameRef.current.value}' taken, please choose another`)
+  }
+
+  function handleErrors(err){
+    socket.disconnect()
+    setErrorText(`error connecting to server - please try again later`)
+    console.log(err)
+
   }
 
   return (
