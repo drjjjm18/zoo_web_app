@@ -11,7 +11,7 @@ function Game() {
   const [names, setNames] = useState([]);
   const [animal, setAnimal] = useState('animal');
   const canSubmit = false;
-//  socket.on('boot', () => boot());
+  socket.on('boot', () => boot());
   socket.on('notReady', () => notReady());
 
   useEffect(() => {
@@ -20,16 +20,10 @@ function Game() {
         for (let key in data){
             newData[key] = {'budget': data[key].budget}
         }
-
         setNames(newData);
     })
 
   });
-
-
-//  function names(event){
-//    console.log()
-//  }
 
   function boot() {
     navigate("/login")

@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from './context/socket';
 
@@ -40,9 +40,14 @@ function Lobby() {
     if(ready){
       socket.emit('start');
     }
-
     else{ return };
   }
+
+  useEffect(() => {
+      if (!socket.connected){
+        navigate('/login');
+  }
+  });
 
   return (
     <div style={{  backgroundColor: '#a5b7d9', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>

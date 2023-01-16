@@ -19,7 +19,7 @@ io.on('connection', function (socket) {
     socket.emit('taken')
   }
   else {
-      players[username] = {'name': username, 'ready': false, 'animals': []}
+      players[username] = {'name': username, 'ready': false, 'budget': 100, 'animals': []}
       socket.username = username
       console.log(players)
       console.log('sending connected')
@@ -65,6 +65,10 @@ io.on('connection', function (socket) {
   function setUpGame(){
     io.emit(concat(['names'], names))
   }
+  socket.on('sendNames', () => {
+    console.log('sending names')
+    io.emit('names', players)
+  });
 
 });
 
