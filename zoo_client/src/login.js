@@ -8,6 +8,8 @@ function Login() {
   const socket = useContext(SocketContext);
   const [errorText, setErrorText] = useState('');
 
+  const [connectionError, setConnectionError] = useState(false)
+
   socket.on('connected', () => enterLobby());
   socket.on('taken', () => takenUsername());
   socket.on('connect_error', err => handleErrors(err))
@@ -16,11 +18,14 @@ function Login() {
   function connectToServer(e){
     let username = NameRef.current.value
     if (username === ''){
+        setConnectionError(true)
         setErrorText('Please enter a username')
         return;
     }
     socket.auth = { username };
     socket.connect();
+    setConnectionError(false)
+    setErrorText('Connecting....')
   }
 
   function enterLobby(){
@@ -29,11 +34,13 @@ function Login() {
 
   function takenUsername(){
     socket.disconnect()
+    setConnectionError(true)
     setErrorText(`Username '${NameRef.current.value}' taken, please choose another`)
   }
 
   function handleErrors(err){
     socket.disconnect()
+    setConnectionError(true)
     setErrorText(`error connecting to server - please try again later`)
     console.log(err)
 
@@ -46,7 +53,7 @@ function Login() {
             <input ref={NameRef} type="text"/>
             <button onClick={connectToServer}> ENTER </button>
         </div>
-        <p  style={{ color: 'red', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <p  style={{ color: connectionError? 'red':'black', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         {errorText}
         </p>
   </div>

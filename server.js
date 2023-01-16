@@ -19,7 +19,7 @@ io.on('connection', function (socket) {
     socket.emit('taken')
   }
   else {
-      players[username] = {'name': username, 'ready': false, 'budget': 100, 'animals': []}
+      players[username] = {'name': username, 'ready': false, 'budget': 100, 'animals': [], wager=false}
       socket.username = username
       console.log(players)
       console.log('sending connected')
@@ -68,7 +68,23 @@ io.on('connection', function (socket) {
   socket.on('sendNames', () => {
     console.log('sending names')
     io.emit('names', players)
+    io.emit('animal', {'name': 'Mole Rat', 'description': 'its a Mole Rat...', 'attraction': 'low...'})
   });
+
+  socket.on('wager', (wager) => {
+    players[socket.username].wager = wager
+    var all_ready = true;
+    for (const key in players) {
+        if (players[key].wager == false) {
+           console.log('not all players ready')
+           all_ready = false;
+        }
+    }
+    if (all_ready){
+      calculateWinner(players);
+    }
+  });
+
 
 });
 

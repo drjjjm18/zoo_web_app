@@ -9,7 +9,11 @@ function Game() {
   const navigate = useNavigate();
 
   const [names, setNames] = useState([]);
-  const [animal, setAnimal] = useState('animal');
+  const [animal, setAnimal] = useState('Please wait for the next item');
+  const [attraction, setAttraction] = useState('');
+  const [description, setDescription] = useState('');
+  const [imageSource, setImageSource] = useState('');
+
   const canSubmit = false;
   socket.on('boot', () => boot());
   socket.on('notReady', () => notReady());
@@ -28,6 +32,16 @@ function Game() {
         navigate('/login');
   }
   });
+
+  useEffect(() => {
+    socket.on('animal', (data) => {
+        setAnimal(data.name)
+        setDescription(data.description)
+        setAttraction(data.attraction)
+    })
+  });
+
+
 
   function boot() {
     navigate("/login")
@@ -69,8 +83,11 @@ function Game() {
 
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: '0px' }}>
           <h1>The Auction House</h1>
-          <h5  style={{ marginTop: '50px' }}>{animal}</h5>
+          <h3 style={{ marginTop: '50px' }}>{animal}</h3>
+          <p>{attraction} </p>
+          <p> {description} </p>
           <p style={{ marginTop: '100px'  }}>Enter your wager</p>
+          <image src= {imageSource}></image>
           <div style={{ marginTop: '10px'  }}>
             <input ref={WagerRef} type="text"/>
             <button
