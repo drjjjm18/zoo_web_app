@@ -10,7 +10,7 @@ function Login() {
 
   const [connectionError, setConnectionError] = useState(false)
 
-  socket.on('connected', () => enterLobby());
+  socket.on('connected', (data) => enterLobby(data));
   socket.on('taken', () => takenUsername());
   socket.on('connect_error', err => handleErrors(err))
   socket.on('connect_failed', err => handleErrors(err))
@@ -22,20 +22,25 @@ function Login() {
         setErrorText('Please enter a username')
         return;
     }
+    setErrorText('Connecting....')
     socket.auth = { username };
     socket.connect();
     setConnectionError(false)
-    setErrorText('Connecting....')
+
   }
 
-  function enterLobby(){
-    navigate("/lobby")
+  function enterLobby(data){
+    navigate("/lobby",
+    {
+        state: data
+    })
   }
 
   function takenUsername(){
+    console.log('taken name')
     socket.disconnect()
     setConnectionError(true)
-    setErrorText(`Username '${NameRef.current.value}' taken, please choose another`)
+    setErrorText(`Username taken, please choose another`)
   }
 
   function handleErrors(err){

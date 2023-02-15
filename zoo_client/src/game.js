@@ -14,7 +14,7 @@ function Game() {
   const [description, setDescription] = useState('');
   const [imageSource, setImageSource] = useState('');
 
-  const canSubmit = false;
+  const [canSubmit , setCanSubmit] = useState(true);
   socket.on('boot', () => boot());
   socket.on('notReady', () => notReady());
 
@@ -22,24 +22,24 @@ function Game() {
     socket.on('names', (data) => {
         var newData = {};
         for (let key in data){
-            newData[key] = {'budget': data[key].budget}
+            newData[key] = {'budget': data[key].budget, 'wager': data[key].wager? data[key].wager : '?'}
         }
         setNames(newData);
     })
-  });
+  }, []);
   useEffect(() => {
       if (!socket.connected){
         navigate('/login');
   }
-  });
+  }, []);
 
   useEffect(() => {
     socket.on('animal', (data) => {
         setAnimal(data.name)
-        setDescription(data.description)
-        setAttraction(data.attraction)
+        setDescription("Description: "+data.description)
+        setAttraction("Attraction: "+data.attraction)
     })
-  });
+  }, []);
 
 
 
@@ -49,8 +49,11 @@ function Game() {
   }
 
   function handleWager(e) {
-   console.log(e);
-   socket.emit('sendNames')
+      if (canSubmit){
+       console.log(WagerRef.current.value);
+       socket.emit('wager', {wager: WagerRef.current.value})
+       setCanSubmit(false)
+      }
   }
 
   function notReady(){
@@ -68,13 +71,15 @@ function Game() {
                 <tr>
                   <th>Name</th>
                   <th>Budget</th>
+                  <th>Wager</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(names).map(([name, {budget}]) => (
+                {Object.entries(names).map(([name, {budget, wager}]) => (
                   <tr key={name}>
                     <td>{name}</td>
                     <td>{budget}</td>
+                    <td>{wager}</td>
                   </tr>
                 ))}
               </tbody>
@@ -92,7 +97,7 @@ function Game() {
             <input ref={WagerRef} type="text"/>
             <button
             onClick={handleWager}
-            style={{ backgroundColor: canSubmit ? 'green' : 'grey' }}
+            style={{ backgroundColor: canSubmit ? 'green' : 'red' }}
             >
             SUBMIT WAGER
             </button>
